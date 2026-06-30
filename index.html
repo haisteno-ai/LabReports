@@ -118,7 +118,7 @@ label.chk input{width:auto;}
     <label class="chk"><input type="checkbox" id="instr" checked> Instructor (00)</label>
     <div class="spacer"></div>
     <button class="ghost" id="add">+ Machine</button>
-    <button class="ghost" id="export">Export</button>
+    <button class="ghost" id="export">Copy</button>
     <button class="ghost" id="clear">Clear</button>
   </div>
   <p class="meta" id="meta"></p>
@@ -133,7 +133,7 @@ label.chk input{width:auto;}
   <div class="tk-add">
     <input id="tkName" placeholder="Machine name (e.g. LIB-B22B-09)">
     <button id="tkAdd">+ Add</button>
-    <button class="ghost" id="tkExport">Export</button>
+    <button class="ghost" id="tkExport">Copy</button>
     <button class="ghost" id="tkClear">Clear</button>
   </div>
   <p class="meta" id="tkMeta"></p>
@@ -264,9 +264,9 @@ function exportGrid(){
   let out=state.lab+' — Lab Report — '+new Date().toLocaleString()+'\n'+'='.repeat(40)+'\n\n';
   if(!keys.length)out+='No notes recorded.\n';
   keys.forEach(suf=>{const m=state.machines[suf];
-    out+=fullName(suf)+(m.status?'  ['+label[m.status]+']':'')+'\n';
-    if(m.note)out+=m.note+'\n';out+='\n';});
-  download(out,state.lab+'_report_'+new Date().toISOString().slice(0,10)+'.txt');toast('Exported');
+    out+=fullName(suf)+(m.status?' ['+label[m.status]+']':'')+'\n';
+    if(m.note)out+='  '+m.note.replace(/\n/g,'\n  ')+'\n';});
+  copyText(out,'Lab report copied');
 }
 
 /* ---- TRACKER ---- */
@@ -303,17 +303,20 @@ function exportTk(){
   let out='Machine Tracker — '+new Date().toLocaleString()+'\n'+'='.repeat(40)+'\n\n';
   if(!state.tracker.length)out+='No machines tracked.\n';
   state.tracker.forEach(t=>{
-    out+=t.name+'\n';
-    out+='Location: '+(t.loc||'—')+'\n';
-    out+='Notes: '+(t.note||'—')+'\n\n';
+    out+=t.name+(t.loc?' — '+t.loc:'')+'\n';
+    out+='  '+(t.note||'(no notes)').replace(/\n/g,'\n  ')+'\n';
   });
-  download(out,'machine_tracker_'+new Date().toISOString().slice(0,10)+'.txt');toast('Exported');
+  copyText(out,'Tracker copied');
 }
 
-function download(text,fname){
-  const blob=new Blob([text],{type:'text/plain'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=fname;a.click();URL.revokeObjectURL(a.href);
+async function copyText(text,msg){
+  try{await navigator.clipboard.writeText(text);toast(msg);}
+  catch(e){
+    const ta=document.createElement('textarea');ta.value=text;
+    ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);
+    ta.select();try{document.execCommand('copy');toast(msg);}catch(_){toast('Copy failed');}
+    document.body.removeChild(ta);
+  }
 }
 
 $('#build').onclick=build;
