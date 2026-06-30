@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lab Reports</title>
+<style>
+:root{--bg:#0f1115;--panel:#1a1d24;--panel2:#22262f;--border:#2c313c;--text:#e7e9ee;--muted:#9aa3b2;--accent:#4f8cff;--accent2:#6ea8ff;--good:#3ecf8e;--warn:#f5b14c;--bad:#f06868;}
+[data-theme="midnight"]{--bg:#0f1115;--panel:#1a1d24;--panel2:#22262f;--border:#2c313c;--text:#e7e9ee;--muted:#9aa3b2;--accent:#4f8cff;--accent2:#6ea8ff;}
+[data-theme="slate"]{--bg:#1b1e23;--panel:#262a31;--panel2:#30353e;--border:#3a4049;--text:#eceff3;--muted:#a3acbb;--accent:#7c89ff;--accent2:#9aa4ff;}
+[data-theme="forest"]{--bg:#0e1512;--panel:#16201b;--panel2:#1d2a23;--border:#27392f;--text:#e5f0ea;--muted:#94ad9f;--accent:#3ecf8e;--accent2:#5fe0a5;}
+[data-theme="ember"]{--bg:#15100e;--panel:#201815;--panel2:#2a201c;--border:#3a2c25;--text:#f1e8e4;--muted:#bda396;--accent:#f5803e;--accent2:#ff9d5f;}
+[data-theme="ocean"]{--bg:#0a1418;--panel:#102026;--panel2:#152b33;--border:#1d3a44;--text:#e2f0f4;--muted:#8fb0ba;--accent:#2dc2d6;--accent2:#52d6e8;}
+[data-theme="grape"]{--bg:#130f1a;--panel:#1e1828;--panel2:#281f35;--border:#372a48;--text:#efe9f5;--muted:#aa9cbe;--accent:#a05cff;--accent2:#bb83ff;}
+[data-theme="rose"]{--bg:#160f12;--panel:#22171c;--panel2:#2d1e25;--border:#3e2a33;--text:#f3e7ec;--muted:#bf99a6;--accent:#ff5c8a;--accent2:#ff83a6;}
+[data-theme="sand"]{--bg:#17140d;--panel:#221d13;--panel2:#2c2619;--border:#3d3424;--text:#f1ebdd;--muted:#bdb190;--accent:#d8b14c;--accent2:#e8c66c;}
+[data-theme="paper"]{--bg:#f4f5f7;--panel:#ffffff;--panel2:#eef0f3;--border:#d8dce2;--text:#1b1e23;--muted:#5d6573;--accent:#3a6df0;--accent2:#2a5be0;}
+[data-theme="mono"]{--bg:#101010;--panel:#1a1a1a;--panel2:#242424;--border:#333;--text:#eaeaea;--muted:#999;--accent:#bbb;--accent2:#ddd;}
+[data-theme="jsu"]{--bg:#0c1626;--panel:#11203a;--panel2:#16294a;--border:#1f3a63;--text:#e7eefa;--muted:#93a8c9;--accent:#c8102e;--accent2:#e0405c;}
+[data-theme="hicon"]{--bg:#000;--panel:#0a0a0a;--panel2:#141414;--border:#444;--text:#fff;--muted:#bbb;--accent:#ffd400;--accent2:#fff04d;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+header{position:sticky;top:0;z-index:30;background:var(--panel);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.3px;}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+input,select,button,textarea{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);}
+button{cursor:pointer;background:var(--accent);border:none;color:#fff;font-weight:600;}
+button.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border);font-weight:500;}
+button:active{transform:translateY(1px);}
+.lab-input{width:130px;text-transform:uppercase;}
+.spacer{flex:1;}
+main{padding:14px;}
+.meta{color:var(--muted);font-size:13px;margin:0 0 12px;}
+
+.tabs{display:flex;gap:6px;padding:8px 14px 0;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;}
+.tab{padding:9px 16px;border-radius:10px 10px 0 0;background:transparent;border:1px solid transparent;border-bottom:none;color:var(--muted);font-weight:600;cursor:pointer;}
+.tab.on{background:var(--bg);color:var(--text);border-color:var(--border);}
+.view{display:none;}.view.on{display:block;}
+
+label.chk{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);cursor:pointer;user-select:none;}
+label.chk input{width:auto;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+.cell{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 10px;cursor:pointer;transition:border-color .15s,transform .1s;min-height:78px;display:flex;flex-direction:column;gap:4px;}
+.cell:hover{border-color:var(--accent);}
+.cell:active{transform:scale(.98);}
+.cell.has-note{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);}
+.cell.instr{background:linear-gradient(180deg,var(--panel2),var(--panel));}
+.cell .num{font-size:20px;font-weight:800;line-height:1;word-break:break-all;}
+.cell .name{font-size:11px;color:var(--muted);word-break:break-all;}
+.cell .tag{font-size:10px;color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.cell .preview{font-size:11px;color:var(--text);background:var(--panel2);border-radius:6px;padding:3px 6px;margin-top:auto;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.dot{position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;}
+.cell .del{position:absolute;top:6px;right:6px;opacity:0;background:var(--bad);width:18px;height:18px;border-radius:50%;font-size:11px;line-height:18px;text-align:center;padding:0;color:#fff;}
+.cell:hover .del{opacity:1;}
+.empty{color:var(--muted);text-align:center;padding:50px 20px;}
+
+/* tracker */
+.tk-add{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.tk-add input{flex:1;min-width:160px;}
+.tcard{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;}
+.tcard .top{display:flex;align-items:center;gap:8px;}
+.tcard .tname{font-weight:700;font-size:15px;flex:1;word-break:break-all;}
+.tcard .loc-row{display:flex;align-items:center;gap:6px;margin:8px 0 6px;}
+.tcard .loc-row .lbl{font-size:11px;color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.tcard .loc-row input{flex:1;}
+.tcard textarea{width:100%;min-height:70px;resize:vertical;}
+.tcard .x{background:var(--panel2);border:1px solid var(--border);color:var(--bad);width:28px;height:28px;border-radius:8px;padding:0;font-size:14px;}
+.tcard .saved{font-size:11px;color:var(--muted);}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:50;}
+.ov.show{display:flex;}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:560px;padding:16px;max-height:90vh;overflow:auto;}
+@media(min-width:640px){.ov{align-items:center;}.modal{border-radius:16px;}}
+.modal h2{margin:0 0 4px;font-size:17px;}
+.modal .sub{color:var(--muted);font-size:13px;margin-bottom:12px;}
+.modal textarea{width:100%;min-height:160px;resize:vertical;}
+.modal .acts{display:flex;gap:8px;margin-top:12px;}
+.status-row{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;}
+.chip{padding:6px 10px;border-radius:20px;border:1px solid var(--border);background:var(--panel2);font-size:13px;cursor:pointer;color:var(--muted);}
+.chip.on{color:#fff;border-color:transparent;}
+.chip.ok.on{background:var(--good);}.chip.iss.on{background:var(--warn);color:#1b1e23;}.chip.dn.on{background:var(--bad);}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:24px;z-index:99;opacity:0;transition:opacity .25s;pointer-events:none;font-size:13px;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body data-theme="midnight">
+<header>
+  <h1>Lab Reports</h1>
+  <div class="spacer"></div>
+  <div class="row">
+    <select id="theme" title="Theme">
+      <option value="midnight">Midnight</option><option value="slate">Slate</option>
+      <option value="forest">Forest</option><option value="ember">Ember</option>
+      <option value="ocean">Ocean</option><option value="grape">Grape</option>
+      <option value="rose">Rose</option><option value="sand">Sand</option>
+      <option value="paper">Paper</option><option value="mono">Mono</option>
+      <option value="jsu">JSU</option><option value="hicon">High Contrast</option>
+    </select>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab on" data-v="grid">Lab Grid</div>
+  <div class="tab" data-v="track">Machine Tracker</div>
+</div>
+
+<!-- LAB GRID -->
+<div class="view on" id="view-grid">
+<main>
+  <div class="row" style="margin-bottom:12px">
+    <input class="lab-input" id="lab" placeholder="LIB-B22B" value="LIB-B22B">
+    <input type="number" id="count" min="0" max="200" value="18" style="width:70px" title="# of machines">
+    <button class="ghost" id="build">Load</button>
+    <label class="chk"><input type="checkbox" id="instr" checked> Instructor (00)</label>
+    <div class="spacer"></div>
+    <button class="ghost" id="add">+ Machine</button>
+    <button class="ghost" id="export">Export</button>
+    <button class="ghost" id="clear">Clear</button>
+  </div>
+  <p class="meta" id="meta"></p>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">No machines. Set a lab name + count, then <b>Load</b>.</div>
+</main>
+</div>
+
+<!-- TRACKER -->
+<div class="view" id="view-track">
+<main>
+  <div class="tk-add">
+    <input id="tkName" placeholder="Machine name (e.g. LIB-B22B-09)">
+    <button id="tkAdd">+ Add</button>
+    <button class="ghost" id="tkExport">Export</button>
+    <button class="ghost" id="tkClear">Clear</button>
+  </div>
+  <p class="meta" id="tkMeta"></p>
+  <div id="tkList"></div>
+  <div class="empty" id="tkEmpty">No machines tracked. Add one above to start logging your search.</div>
+</main>
+</div>
+
+<div class="ov" id="ov">
+  <div class="modal">
+    <h2 id="mName"></h2>
+    <div class="sub">Tap a status, jot notes, save.</div>
+    <div class="status-row">
+      <span class="chip ok" data-s="ok">✓ OK</span>
+      <span class="chip iss" data-s="iss">⚠ Issue</span>
+      <span class="chip dn" data-s="dn">✗ Down</span>
+    </div>
+    <textarea id="mNotes" placeholder="Notes for this machine…"></textarea>
+    <div class="acts">
+      <button class="ghost" id="mDel">Delete</button>
+      <div class="spacer"></div>
+      <button class="ghost" id="mCancel">Cancel</button>
+      <button id="mSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const KEY='labReports.v2';
+let state=load();
+let editing=null;
+
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));return d&&d.machines?d:fresh();}catch{return fresh();}}
+function fresh(){return{lab:'LIB-B22B',theme:'midnight',instr:true,machines:{},tracker:[]};}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1600);}
+function esc(s){return(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+function suffix(n){return String(n).padStart(2,'0');}
+function fullName(suf){return state.lab.toUpperCase()+'-'+suf;}
+function applyTheme(){document.body.dataset.theme=state.theme;$('#theme').value=state.theme;}
+
+/* ---- tabs ---- */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');$('#view-'+t.dataset.v).classList.add('on');
+});
+
+/* ---- LAB GRID ---- */
+function build(){
+  const lab=$('#lab').value.trim().toUpperCase().replace(/-+$/,'');
+  const count=Math.max(0,parseInt($('#count').value)||0);
+  state.lab=lab||'LIB-B22B';
+  state.instr=$('#instr').checked;
+  const want=[];
+  if(state.instr)want.push('00');
+  for(let i=1;i<=count;i++)want.push(suffix(i));
+  want.forEach(s=>{if(!state.machines[s])state.machines[s]={status:'',note:''};});
+  if(!state.instr&&state.machines['00']&&!state.machines['00'].note&&!state.machines['00'].status)delete state.machines['00'];
+  save();render();toast('Loaded '+Object.keys(state.machines).length+' machines');
+}
+function addManual(){
+  const raw=prompt('Machine suffix (e.g. 00, 19, 20A, INSTR):');
+  if(raw===null)return;
+  const suf=raw.trim().toUpperCase();
+  if(!suf)return;
+  if(!state.machines[suf])state.machines[suf]={status:'',note:''};
+  save();render();toast('Added '+fullName(suf));
+}
+function sortKeys(){
+  return Object.keys(state.machines).sort((a,b)=>{
+    const na=parseInt(a),nb=parseInt(b);
+    if(!isNaN(na)&&!isNaN(nb)&&na!==nb)return na-nb;
+    if(!isNaN(na)&&isNaN(nb))return -1;
+    if(isNaN(na)&&!isNaN(nb))return 1;
+    return a.localeCompare(b);
+  });
+}
+function dotColor(s){return s==='ok'?'var(--good)':s==='iss'?'var(--warn)':s==='dn'?'var(--bad)':'';}
+function render(){
+  applyTheme();
+  $('#lab').value=state.lab;$('#instr').checked=state.instr;
+  const keys=sortKeys();const grid=$('#grid');grid.innerHTML='';
+  $('#empty').style.display=keys.length?'none':'block';
+  const noted=keys.filter(k=>state.machines[k].note||state.machines[k].status).length;
+  $('#meta').textContent=state.lab+' — '+keys.length+' machines, '+noted+' flagged · '+new Date().toLocaleDateString();
+  keys.forEach(suf=>{
+    const m=state.machines[suf];const c=document.createElement('div');
+    c.className='cell'+(m.note||m.status?' has-note':'')+(suf==='00'?' instr':'');
+    const dc=dotColor(m.status);
+    c.innerHTML=(dc?`<span class="dot" style="background:${dc}"></span>`:'')+
+      `<button class="del" data-del="${suf}">×</button>`+
+      (suf==='00'?`<span class="tag">Instructor</span>`:'')+
+      `<span class="num">${esc(suf)}</span><span class="name">${fullName(suf)}</span>`+
+      (m.note?`<span class="preview">${esc(m.note)}</span>`:'');
+    c.onclick=e=>{if(e.target.dataset.del)return;openModal(suf);};
+    grid.appendChild(c);
+  });
+  grid.querySelectorAll('[data-del]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();const suf=b.dataset.del;
+    if(confirm('Delete '+fullName(suf)+'?')){delete state.machines[suf];save();render();}
+  });
+}
+function openModal(suf){
+  editing=suf;const m=state.machines[suf];
+  $('#mName').textContent=fullName(suf);$('#mNotes').value=m.note||'';
+  document.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('on',ch.dataset.s===m.status));
+  $('#ov').classList.add('show');setTimeout(()=>$('#mNotes').focus(),50);
+}
+function closeModal(){$('#ov').classList.remove('show');editing=null;}
+document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+  const on=ch.classList.contains('on');
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  if(!on)ch.classList.add('on');
+});
+$('#mSave').onclick=()=>{if(editing===null)return;const sel=document.querySelector('.chip.on');
+  state.machines[editing]={status:sel?sel.dataset.s:'',note:$('#mNotes').value.trim()};save();render();closeModal();toast('Saved');};
+$('#mCancel').onclick=closeModal;
+$('#mDel').onclick=()=>{if(editing!==null&&confirm('Delete '+fullName(editing)+'?')){delete state.machines[editing];save();render();closeModal();}};
+$('#ov').onclick=e=>{if(e.target.id==='ov')closeModal();};
+function exportGrid(){
+  const keys=sortKeys().filter(k=>state.machines[k].note||state.machines[k].status);
+  const label={ok:'OK',iss:'ISSUE',dn:'DOWN'};
+  let out=state.lab+' — Lab Report — '+new Date().toLocaleString()+'\n'+'='.repeat(40)+'\n\n';
+  if(!keys.length)out+='No notes recorded.\n';
+  keys.forEach(suf=>{const m=state.machines[suf];
+    out+=fullName(suf)+(m.status?'  ['+label[m.status]+']':'')+'\n';
+    if(m.note)out+=m.note+'\n';out+='\n';});
+  download(out,state.lab+'_report_'+new Date().toISOString().slice(0,10)+'.txt');toast('Exported');
+}
+
+/* ---- TRACKER ---- */
+function tkAdd(){
+  const name=$('#tkName').value.trim();
+  if(!name)return;
+  state.tracker.unshift({id:Date.now(),name,loc:'',note:'',ts:new Date().toISOString()});
+  $('#tkName').value='';save();renderTk();toast('Added '+name);
+}
+function renderTk(){
+  const list=$('#tkList');list.innerHTML='';
+  $('#tkEmpty').style.display=state.tracker.length?'none':'block';
+  $('#tkMeta').textContent=state.tracker.length+' machines tracked · '+new Date().toLocaleDateString();
+  state.tracker.forEach(t=>{
+    const c=document.createElement('div');c.className='tcard';
+    c.innerHTML=
+      `<div class="top"><span class="tname">${esc(t.name)}</span>`+
+      `<span class="saved">${new Date(t.ts).toLocaleDateString()}</span>`+
+      `<button class="x" data-x="${t.id}">×</button></div>`+
+      `<div class="loc-row"><span class="lbl">Loc</span>`+
+      `<input data-loc="${t.id}" value="${esc(t.loc)}" placeholder="Possible location…"></div>`+
+      `<textarea data-note="${t.id}" placeholder="Search notes…">${esc(t.note)}</textarea>`;
+    list.appendChild(c);
+  });
+  list.querySelectorAll('[data-loc]').forEach(i=>i.oninput=e=>{upd(+i.dataset.loc,'loc',e.target.value);});
+  list.querySelectorAll('[data-note]').forEach(i=>i.oninput=e=>{upd(+i.dataset.note,'note',e.target.value);});
+  list.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{
+    const t=state.tracker.find(x=>x.id==b.dataset.x);
+    if(confirm('Remove '+t.name+'?')){state.tracker=state.tracker.filter(x=>x.id!=b.dataset.x);save();renderTk();}
+  });
+}
+function upd(id,k,v){const t=state.tracker.find(x=>x.id===id);if(t){t[k]=v;save();}}
+function exportTk(){
+  let out='Machine Tracker — '+new Date().toLocaleString()+'\n'+'='.repeat(40)+'\n\n';
+  if(!state.tracker.length)out+='No machines tracked.\n';
+  state.tracker.forEach(t=>{
+    out+=t.name+'\n';
+    out+='Location: '+(t.loc||'—')+'\n';
+    out+='Notes: '+(t.note||'—')+'\n\n';
+  });
+  download(out,'machine_tracker_'+new Date().toISOString().slice(0,10)+'.txt');toast('Exported');
+}
+
+function download(text,fname){
+  const blob=new Blob([text],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=fname;a.click();URL.revokeObjectURL(a.href);
+}
+
+$('#build').onclick=build;
+$('#add').onclick=addManual;
+$('#export').onclick=exportGrid;
+$('#clear').onclick=()=>{if(confirm('Clear all grid machines & notes?')){state.machines={};save();render();toast('Cleared');}};
+$('#theme').onchange=e=>{state.theme=e.target.value;save();applyTheme();};
+$('#count').addEventListener('keydown',e=>{if(e.key==='Enter')build();});
+$('#lab').addEventListener('keydown',e=>{if(e.key==='Enter')build();});
+$('#tkAdd').onclick=tkAdd;
+$('#tkName').addEventListener('keydown',e=>{if(e.key==='Enter')tkAdd();});
+$('#tkExport').onclick=exportTk;
+$('#tkClear').onclick=()=>{if(confirm('Clear all tracked machines?')){state.tracker=[];save();renderTk();toast('Cleared');}};
+
+render();renderTk();
+if(!Object.keys(state.machines).length)build();
+</script>
+</body>
+</html>
