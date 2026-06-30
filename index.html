@@ -147,7 +147,7 @@ label.chk input{width:auto;}
     <h2 id="mName"></h2>
     <div class="sub">Tap a status, jot notes, save.</div>
     <div class="status-row">
-      <span class="chip ok" data-s="ok">✓ OK</span>
+      <span class="chip ok" data-s="ok">✓ Live in KACE</span>
       <span class="chip iss" data-s="iss">⚠ Issue</span>
       <span class="chip dn" data-s="dn">✗ Down</span>
     </div>
@@ -260,7 +260,7 @@ $('#mDel').onclick=()=>{if(editing!==null&&confirm('Delete '+fullName(editing)+'
 $('#ov').onclick=e=>{if(e.target.id==='ov')closeModal();};
 function exportGrid(){
   const keys=sortKeys().filter(k=>state.machines[k].note||state.machines[k].status);
-  const label={ok:'OK',iss:'ISSUE',dn:'DOWN'};
+  const label={ok:'LIVE IN KACE',iss:'ISSUE',dn:'DOWN'};
   let out=state.lab+' — Lab Report — '+new Date().toLocaleString()+'\n'+'='.repeat(40)+'\n\n';
   if(!keys.length)out+='No notes recorded.\n';
   keys.forEach(suf=>{const m=state.machines[suf];
